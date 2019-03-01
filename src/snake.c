@@ -73,11 +73,21 @@ int main(void)
 	//Game setup
 	hStdin = GetStdHandle(STD_INPUT_HANDLE);
 	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	consoleWindow = GetConsoleWindow();
-	desktopScreen = GetDesktopWindow();
 
 	SetConsoleWindowInfo(hStdout, TRUE, &windowSize);
 	SetConsoleScreenBufferSize(hStdout, screenBSize);
+
+	oldFontInfo.cbSize = sizeof(CONSOLE_FONT_INFOEX);
+	GetCurrentConsoleFontEx(hStdout, FALSE, &oldFontInfo);
+	newFontInfo = oldFontInfo;
+	newFontInfo.dwFontSize = fontSize;
+	newFontInfo.FontWeight = fontWeight;
+	SetCurrentConsoleFontEx(hStdout, FALSE, &newFontInfo); //set font here to ensure proper window sizing before positioning
+	SetConsoleCursorInfo(hStdout, &cursor);
+	SetConsoleTitle("Snake");
+
+	consoleWindow = GetConsoleWindow();
+	desktopScreen = GetDesktopWindow();
 	GetWindowRect(consoleWindow, &oldConsoleWindowRect);
 	GetWindowRect(desktopScreen, &desktopScreenRect);
 	desktopScreenWidth = desktopScreenRect.right - desktopScreenRect.left;
@@ -92,15 +102,6 @@ int main(void)
 	newConsoleWindowStyle = oldConsoleWindowStyle ^ (WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SIZEBOX); //prevent resizing
 	SetWindowLongPtr(consoleWindow, GWL_STYLE, newConsoleWindowStyle);
 	
-	oldFontInfo.cbSize = sizeof(CONSOLE_FONT_INFOEX);
-	GetCurrentConsoleFontEx(hStdout, FALSE, &oldFontInfo);
-	newFontInfo = oldFontInfo;
-	newFontInfo.dwFontSize = fontSize;
-	newFontInfo.FontWeight = fontWeight;
-	SetCurrentConsoleFontEx(hStdout, FALSE, &newFontInfo);
-	SetConsoleCursorInfo(hStdout, &cursor);
-	SetConsoleTitle("Snake");
-
 	srand((unsigned int)time(NULL));
 
 	printf("Snake\n\n");

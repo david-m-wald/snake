@@ -53,3 +53,7 @@ The game is over when the next move results in the snake crashing into a boundar
 - Single-size game board
 - Constant speed
 - Single-segment growth powerups
+
+#### v1.0.1 -- February 28, 2019
+
+- Fixed window centering
